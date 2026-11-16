@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carros de Selecção · Stand Automóvel em Lisboa</title>
+<meta name="description" content="Carros de Selecção — viaturas premium seleccionadas em Lisboa. Porsche, Mercedes-Benz, Aston Martin e mais. Financiamento, retoma e garantia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="hdr" id="hdr">
+  <button class="hdr-btn" id="menuBtn" aria-label="Abrir menu">
+    <svg class="ic"><use href="#i-grid"/></svg><span>Menu</span>
+  </button>
+  <a href="#/" class="logo" aria-label="Carros de Selecção — início"><img src="assets/logo.svg" alt="Carros de Selecção"></a>
+  <nav class="hdr-right">
+    <a class="hdr-btn" href="#/viaturas"><svg class="ic"><use href="#i-list"/></svg><span>Viaturas</span></a>
+    <button class="hdr-btn" data-open-search><svg class="ic"><use href="#i-search"/></svg><span>Pesquisar</span></button>
+    <a class="hdr-btn" href="#/servicos"><svg class="ic"><use href="#i-tool"/></svg><span>Serviços</span></a>
+    <a class="hdr-btn" href="#/contactos"><svg class="ic"><use href="#i-chat"/></svg><span>Contactos</span></a>
+  </nav>
+</header>
+
+<!-- ============ MENU LATERAL ============ -->
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-top">
+    <img src="assets/logo.svg" alt="" class="drawer-logo">
+    <button class="icon-btn" id="drawerClose" aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <nav class="drawer-nav">
+    <a href="#/">Início</a>
+    <a href="#/viaturas">Viaturas</a>
+    <a href="#/viaturas/vendidos">Vendidos</a>
+    <a href="#/servicos">Financiamento</a>
+    <a href="#/servicos">Compramos o seu carro</a>
+    <a href="#/empresa">Empresa</a>
+    <a href="#/contactos">Contactos</a>
+  </nav>
+  <div class="drawer-foot">
+    <a class="drawer-tel" href="tel:+351217996060"><svg class="ic"><use href="#i-phone"/></svg>217 996 060</a>
+    <small>Chamada para rede fixa nacional</small>
+    <a class="drawer-tel" href="mailto:vendas@carrosdeseleccao.pt"><svg class="ic"><use href="#i-mail"/></svg>vendas@carrosdeseleccao.pt</a>
+    <div class="socials">
+      <a href="https://www.facebook.com/carrosdeselecao/" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</aside>
+
+<main id="app"></main>
+
+<!-- ============ ONDE ESTAMOS / FOOTER ============ -->
+<section class="visit" id="contactos">
+  <div class="wrap visit-grid">
+    <div class="visit-info">
+      <p class="eyebrow">Onde estamos?</p>
+      <h2>Visite-nos!</h2>
+      <p class="visit-co">Carros de Selecção — Sociedade Automóvel Lda</p>
+      <p class="visit-line"><svg class="ic"><use href="#i-pin"/></svg>Rua Dona Filipa de Vilhena 28A, 1000-137 Lisboa</p>
+      <p class="visit-line"><svg class="ic"><use href="#i-phone"/></svg><a href="tel:+351217996060">217 996 060</a> <small>(Chamada para a rede fixa nacional)</small></p>
+      <p class="visit-line"><svg class="ic"><use href="#i-mail"/></svg><a href="mailto:vendas@carrosdeseleccao.pt">vendas@carrosdeseleccao.pt</a></p>
+      <div class="visit-actions">
+        <a class="btn btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=Rua+Dona+Filipa+de+Vilhena+28A+1000-137+Lisboa"><svg class="ic"><use href="#i-pin"/></svg>Obter direções</a>
+        <a class="btn btn-ghost" target="_blank" rel="noopener" href="https://www.facebook.com/carrosdeselecao/">Facebook</a>
+        <a class="btn btn-ghost" target="_blank" rel="noopener" href="https://www.facebook.com/messages/t/carrosdeselecao/">Messenger</a>
+      </div>
+    </div>
+    <div class="callback">
+      <h3>Precisa de ajuda? Nós ligamos!</h3>
+      <form class="callback-form" data-demo-form>
+        <input type="text" placeholder="O seu nome" required>
+        <input type="tel" placeholder="O seu telefone" required>
+        <label class="check"><input type="checkbox" required> Li e aceito os Termos de Utilização e Proteção de Dados</label>
+        <button class="btn btn-primary" type="submit"><svg class="ic"><use href="#i-phone"/></svg>Ligue-me</button>
+      </form>
+      <div class="map"><iframe title="Mapa" loading="lazy" src="https://maps.google.com/maps?q=Rua%20Dona%20Filipa%20de%20Vilhena%2028A%2C%201000-137%20Lisboa&z=16&output=embed"></iframe></div>
+    </div>
+  </div>
+</section>
+
+<footer class="ftr">
+  <div class="wrap ftr-in">
+    <img src="assets/logo.svg" alt="Carros de Selecção" class="ftr-logo">
+    <p>Carros de Selecção — Sociedade Automóvel Lda · NIF 506358089 · © 2026</p>
+    <p class="ftr-links"><a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">Livro de Reclamações</a> · <a href="#">Política de Privacidade</a> · <a href="#">Resolução de conflitos</a> · <a href="#">Intermediação de Crédito</a></p>
+  </div>
+</footer>
+
+<!-- Botão flutuante "Fale agora" -->
+<div class="fab-wrap">
+  <div class="fab-panel" id="fabPanel">
+    <div class="fab-head"><strong>Carros de Selecção</strong><span>Estamos aqui para ajudar!</span></div>
+    <a href="tel:+351217996060"><svg class="ic"><use href="#i-phone"/></svg><div><small>Ligar</small>217 996 060</div></a>
+    <a href="https://www.facebook.com/messages/t/carrosdeselecao/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-chat"/></svg><div><small>Messenger</small>Enviar mensagem</div></a>
+    <a href="mailto:vendas@carrosdeseleccao.pt"><svg class="ic"><use href="#i-mail"/></svg><div><small>Email</small>vendas@carrosdeseleccao.pt</div></a>
+  </div>
+  <button class="fab" id="fab" aria-label="Fale agora"><svg class="ic"><use href="#i-chat"/></svg><span>Fale agora</span></button>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" aria-hidden="true">
+  <button class="lb-x icon-btn" data-lb-close aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+  <button class="lb-nav prev" data-lb="-1" aria-label="Anterior"><svg class="ic"><use href="#i-left"/></svg></button>
+  <img id="lbImg" alt="">
+  <button class="lb-nav next" data-lb="1" aria-label="Seguinte"><svg class="ic"><use href="#i-right"/></svg></button>
+  <span class="lb-count" id="lbCount"></span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============ ÍCONES ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-grid" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="5" r="1.7"/><circle cx="12" cy="5" r="1.7"/><circle cx="19" cy="5" r="1.7"/><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/><circle cx="5" cy="19" r="1.7"/><circle cx="12" cy="19" r="1.7"/><circle cx="19" cy="19" r="1.7"/></g></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></symbol>
+    <symbol id="i-road" viewBox="0 0 24 24"><path d="M5 21 9 3M19 21 15 3M12 5v2.5M12 11v2.5M12 17v2.5"/></symbol>
+    <symbol id="i-seat" viewBox="0 0 24 24"><path d="M8 3.5c1.5 0 2.3.8 2.5 2.2l1.2 8.3h5.6a2 2 0 0 1 2 2V18H10.2a2 2 0 0 1-2-1.7L6.4 5.8C6.3 4.5 6.8 3.5 8 3.5z"/><path d="M11 21h8"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17H3.5v-4.2l1.8-4.6A2 2 0 0 1 7.2 7h9.6a2 2 0 0 1 1.9 1.2l1.8 4.6V17H19"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M9.5 17h5M3.5 12.5h17"/></symbol>
+    <symbol id="i-fuel" viewBox="0 0 24 24"><path d="M3.5 21h11M5 21V5a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v16M5 10h9"/><path d="M14 13h2a2 2 0 0 1 2 2v2a1.5 1.5 0 0 0 3 0V9.5L18 6.5"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.3 18.5a9.5 9.5 0 1 1 17.4 0"/><path d="m12 14 4.5-4.5"/><circle cx="12" cy="14" r="1.3"/></symbol>
+    <symbol id="i-engine" viewBox="0 0 24 24"><path d="M7 8h3V5.5h5V8h2l2.5 3h1.5v5h-1.5L17 18.5H9L7 16H4.5v-2.5H3v-3h1.5V8z"/><path d="M10 5.5h5"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="5.5" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="18.5" cy="5" r="1.8"/><circle cx="5.5" cy="19" r="1.8"/><circle cx="12" cy="19" r="1.8"/><path d="M5.5 6.8v10.4M12 6.8v10.4M18.5 6.8V12H5.5"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 2.5a9.5 9.5 0 0 0 0 19c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1-.3-.3-.4-.7-.4-1.1 0-.8.7-1.5 1.5-1.5h1.8A5.5 5.5 0 0 0 21.5 11c0-4.7-4.3-8.5-9.5-8.5z"/><circle cx="7.5" cy="11.5" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M4 20.5V10l6.5-6.5H20v17z"/><path d="M4 12.5h16M15 15.5h2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m15.4 13.8 1.6 7.7-5-2.9-5 2.9 1.6-7.7"/><path d="m9.8 9 1.5 1.5 3-3"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21.5V4M5 4.5s1.3-1 4-1 4.5 2 7 2 3-.8 3-.8v9.5s-.8.8-3 .8-4.5-2-7-2-4 1-4 1"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M21.5 16.9v2.8a2 2 0 0 1-2.2 2 19.5 19.5 0 0 1-8.5-3 19.2 19.2 0 0 1-5.9-5.9A19.5 19.5 0 0 1 1.9 4.2 2 2 0 0 1 3.9 2h2.8a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L7.7 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.8 2.2z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 16.5v-5M12 8h.01"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M8 12h8M12 8v8"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M8 12h8"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="m8.5 12 2.3 2.3 4.7-4.7"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19.5 10c0 5.5-7.5 11.5-7.5 11.5S4.5 15.5 4.5 10a7.5 7.5 0 0 1 15 0z"/><circle cx="12" cy="10" r="2.7"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m21.5 7.5-9.5 6-9.5-6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 21.5s7.5-3.5 7.5-9.5V5.5L12 2.5l-7.5 3V12c0 6 7.5 9.5 7.5 9.5z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="2.2"/><path d="M12 14.2v7.3M9.8 12H2.5M14.2 12h7.3"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5.5l11-2v12.5"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+    <symbol id="i-euro" viewBox="0 0 24 24"><path d="M4 10h11M4 14h9M18.5 6.2A7.5 7.5 0 0 0 13.5 4.5 7.5 7.5 0 0 0 6 12a7.5 7.5 0 0 0 7.5 7.5 7.5 7.5 0 0 0 5-1.8"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="m16.5 3 4 4-4 4M3.5 11V10a3 3 0 0 1 3-3h14M7.5 21l-4-4 4-4M20.5 13v1a3 3 0 0 1-3 3h-14"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4.5h-5L7.5 7h-3a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h15a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.3"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M14.5 3.5h6v6M9.5 20.5h-6v-6M20.5 3.5 14 10M3.5 20.5 10 14"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6.5 9V3.5h11V9M6.5 17.5h-2a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v4.5a2 2 0 0 1-2 2h-2"/><rect x="6.5" y="14" width="11" height="7" rx="1"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.7"/><circle cx="6" cy="12" r="2.7"/><circle cx="18" cy="19" r="2.7"/><path d="m8.4 13.4 7.2 4.2M15.6 6.4l-7.2 4.2"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></g></symbol>
+    <symbol id="i-compare" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="M12 4v16"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.5"/><path d="m11.2 11.8 9.3-9.3M17 6l2.5 2.5M14.5 8.5l2 2"/></symbol>
+  </defs>
+</svg>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
