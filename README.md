@@ -10,3 +10,5 @@ Proposta de redesign para o stand **Carros de Selecção** (Lisboa).
 Notas da demo:
 - C 32 AMG marcado como VENDIDO e 997 como RESERVADO apenas para mostrar as etiquetas.
 - Os formulários não enviam dados (apenas mensagem de confirmação).
+
+Esta é uma proposta de design para apresentação ao stand. **Não é o site oficial da Carros de Selecção.** Os formulários não enviam nem guardam dados.

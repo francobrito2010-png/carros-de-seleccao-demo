@@ -631,3 +631,9 @@ main{padding-top:var(--hdr);min-height:60vh}
   .obs{max-height:none}.obs::after{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- Etiqueta de demonstração ---------- */
+.demo-tag{position:fixed;left:14px;bottom:14px;z-index:44;background:rgba(var(--ov),.86);color:#fff;font-family:var(--ff-h);font-size:11px;font-weight:600;letter-spacing:.08em;padding:8px 14px;border-radius:999px;backdrop-filter:blur(6px);pointer-events:none;max-width:calc(100vw - 110px)}
+:root[data-skin="noir"] .demo-tag{background:rgba(40,40,44,.9)}
+@media (max-width:760px){.demo-tag span{display:none}}
+@media print{.demo-tag{display:none}}
