@@ -127,7 +127,9 @@
     app.innerHTML = `
     <section class="hero" id="hero">
       ${heroCars.map((c, i) => `<div class="hero-slide ${i ? "" : "on"}"><img src="${img(c, 0)}" alt="${c.marca} ${c.modelo}" ${i ? 'loading="lazy" decoding="async"' : 'fetchpriority="high"'}></div>`).join("")}
-      <div class="hero-txt"><div class="wrap"><span class="eyebrow">Stand automóvel · Lisboa</span><h1>Que viatura procura?</h1></div></div>
+      <button class="hero-nav prev" data-h="-1" aria-label="Viatura anterior">${ic("left")}</button>
+      <button class="hero-nav next" data-h="1" aria-label="Viatura seguinte">${ic("right")}</button>
+      <div class="hero-txt"><div class="wrap"><span class="eyebrow">Stand automóvel · Lisboa</span><h1>Que viatura procura?</h1><div class="hero-dots">${heroCars.map((_, i) => `<button type="button" data-hd="${i}" class="${i ? "" : "on"}" aria-label="Viatura ${i + 1}"></button>`).join("")}</div></div></div>
       <div class="hero-car" id="heroCar"></div>
     </section>
 
@@ -203,16 +205,18 @@
       </div>
     </section>`;
 
-    // hero rotativo
-    const slides = $$(".hero-slide"), hc = $("#heroCar");
+    // hero: rotação automática, flechas, pontos e deslizar com o dedo
+    const slides = $$(".hero-slide"), hc = $("#heroCar"), heroEl = $("#hero");
     let hi = 0;
     const setHeroCar = () => { const c = heroCars[hi]; hc.innerHTML = `<a href="#/viatura/${c.id}"><b>${c.marca}</b> ${c.modelo.split(" ").slice(0, 3).join(" ")} · ${num(c.preco)} € ${ic("right")}</a>`; };
-    setHeroCar();
-    clearInterval(renderHome._t);
-    renderHome._t = setInterval(() => { if (document.hidden) return;
-      if (!document.body.contains(slides[0])) return clearInterval(renderHome._t);
-      slides[hi].classList.remove("on"); hi = (hi + 1) % slides.length; slides[hi].classList.add("on"); setHeroCar();
-    }, 6000);
+    const heroGo = i => { hi = (i + slides.length) % slides.length; slides.forEach((s, k) => s.classList.toggle("on", k === hi)); $$(".hero-dots button").forEach((d, k) => d.classList.toggle("on", k === hi)); setHeroCar(); };
+    const heroAuto = () => { clearInterval(renderHome._t); renderHome._t = setInterval(() => { if (document.hidden) return; if (!document.body.contains(slides[0])) return clearInterval(renderHome._t); heroGo(hi + 1); }, 6000); };
+    heroEl._go = i => { heroGo(i); heroAuto(); };
+    heroEl._pause = () => clearInterval(renderHome._t);
+    heroEl._resume = heroAuto;
+    $$("[data-h]").forEach(b => b.onclick = () => heroEl._go(hi + +b.dataset.h));
+    $$("[data-hd]").forEach(b => b.onclick = () => heroEl._go(+b.dataset.hd));
+    setHeroCar(); heroAuto();
 
     // pesquisa
     const sM = $("#sMarca"), sMo = $("#sModelo"), cnt = $("#sCount");
@@ -258,22 +262,68 @@
     if (e.target.closest("[data-qv-close]")) { e.preventDefault(); e.target.closest(".card").classList.remove("qv-open"); return; }
   });
 
-  /* Deslizar fotos nos cards (telemóvel) */
-  let sw = null;
-  const stepCard = (m, d) => {
-    const n = +m.dataset.n; if (n < 2) return; const i = (+m.dataset.i + d + n) % n;
-    const ims = $$("img", m); const im = ims[i]; if (im.dataset.src) { im.src = im.dataset.src; im.removeAttribute("data-src"); }
+  /* ---------- Deslizar com o dedo: a foto acompanha o dedo (portada, cards e galeria) ---------- */
+  let blockClick = 0;
+  const loadSlide = el => { const im = el.tagName === "IMG" ? el : el.querySelector("img"); if (im && im.dataset.src) { im.src = im.dataset.src; im.removeAttribute("data-src"); } };
+  const cardGo = (m, i) => {
+    const ims = $$("img", m); loadSlide(ims[i]);
     ims.forEach((x, k) => x.classList.toggle("on", k === i)); $$(".dots i", m).forEach((x, k) => x.classList.toggle("on", k === i)); m.dataset.i = i;
   };
-  document.addEventListener("touchstart", e => { const m = e.target.closest(".card-media"); sw = m ? { m, x: e.touches[0].clientX, y: e.touches[0].clientY, moved: false } : null; }, { passive: true });
-  document.addEventListener("touchmove", e => { if (!sw) return; const dx = e.touches[0].clientX - sw.x, dy = e.touches[0].clientY - sw.y; if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) sw.moved = true; }, { passive: true });
-  document.addEventListener("touchend", e => {
-    if (!sw) return; const dx = e.changedTouches[0].clientX - sw.x, dy = e.changedTouches[0].clientY - sw.y;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) { stepCard(sw.m, dx < 0 ? 1 : -1); sw.block = Date.now(); swBlock = sw.block; }
-    sw = null;
+  const SW_SEL = ".card-media, .hero, #gal";
+  const swItems = c => c.matches(".hero") ? $$(".hero-slide", c) : c.matches("#gal") ? $$(".gal-img", c) : $$("img", c);
+  let sw = null;
+  const swReset = st => {
+    [st.cur, st.nb].forEach(el => { if (el) { el.style.transform = ""; el.style.opacity = ""; el.style.transition = ""; el.style.zIndex = ""; } });
+    void st.c.offsetWidth; st.c.classList.remove("swiping");
+  };
+  document.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse" || sw) return;
+    if (e.target.closest("button, select, input, .qv, .hero-car")) return;
+    let c = e.target.closest(SW_SEL);
+    if (!c && e.target.closest(".card-link")) { const m = e.target.closest(".card").querySelector(".card-media"), r = m.getBoundingClientRect(); if (e.clientY >= r.top && e.clientY <= r.bottom) c = m; }
+    if (!c) return;
+    const items = swItems(c); if (items.length < 2) return;
+    const i = Math.max(0, items.findIndex(x => x.classList.contains("on")));
+    sw = { c, items, i, x: e.clientX, y: e.clientY, w: c.clientWidth, dx: 0, t: 0, dir: 0, id: e.pointerId, active: false, cur: items[i], nb: null };
   }, { passive: true });
-  let swBlock = 0;
-  document.addEventListener("click", e => { if (Date.now() - swBlock < 400 && e.target.closest(".card")) { e.preventDefault(); e.stopPropagation(); } }, true);
+  document.addEventListener("pointermove", e => {
+    const s = sw; if (!s || e.pointerId !== s.id) return;
+    const dx = e.clientX - s.x, dy = e.clientY - s.y;
+    if (!s.active) {
+      if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { sw = null; return; }
+      if (Math.abs(dx) < 8) return;
+      s.active = true; s.t = performance.now(); s.c.classList.add("swiping");
+      if (s.c._pause) s.c._pause();
+    }
+    s.dx = dx; const n = s.items.length, dir = dx < 0 ? 1 : -1;
+    if (dir !== s.dir) {
+      if (s.nb) { s.nb.style.transform = ""; s.nb.style.opacity = ""; s.nb.style.zIndex = ""; }
+      s.dir = dir; s.nb = s.items[(s.i + dir + n) % n]; loadSlide(s.nb);
+    }
+    s.cur.style.transform = `translate3d(${dx}px,0,0)`; s.cur.style.opacity = "1"; s.cur.style.zIndex = "2";
+    s.nb.style.transform = `translate3d(${dx + dir * s.w}px,0,0)`; s.nb.style.opacity = "1"; s.nb.style.zIndex = "2";
+  }, { passive: true });
+  const swEnd = e => {
+    const st = sw; if (!st || e.pointerId !== st.id) return; sw = null;
+    if (!st.active || !st.nb) return;
+    blockClick = Date.now();
+    const v = Math.abs(st.dx) / Math.max(1, performance.now() - st.t);
+    const pass = e.type !== "pointercancel" && (Math.abs(st.dx) > st.w * 0.18 || (v > 0.45 && Math.abs(st.dx) > 25));
+    const T = "transform .34s cubic-bezier(.22,.8,.24,1)";
+    st.cur.style.transition = T; st.nb.style.transition = T;
+    if (pass) {
+      st.cur.style.transform = `translate3d(${-st.dir * st.w}px,0,0)`; st.nb.style.transform = "translate3d(0,0,0)";
+      const ni = (st.i + st.dir + st.items.length) % st.items.length;
+      setTimeout(() => { if (st.c._go) st.c._go(ni); else cardGo(st.c, ni); swReset(st); }, 350);
+    } else {
+      st.cur.style.transform = "translate3d(0,0,0)"; st.nb.style.transform = `translate3d(${st.dir * st.w}px,0,0)`;
+      setTimeout(() => swReset(st), 350);
+      if (st.c._resume) st.c._resume();
+    }
+  };
+  document.addEventListener("pointerup", swEnd);
+  document.addEventListener("pointercancel", swEnd);
+  document.addEventListener("click", e => { if (Date.now() - blockClick < 450 && e.target.closest(SW_SEL + ", .card")) { e.preventDefault(); e.stopPropagation(); } }, true);
 
   /* ---------- DETALHE ---------- */
   const GROUPS = [
@@ -394,9 +444,7 @@
     };
     $$("[data-g]").forEach(b => b.onclick = () => go(gi + +b.dataset.g));
     $("#thumbs").onclick = e => { const b = e.target.closest("[data-t]"); b && go(+b.dataset.t); };
-    let tx = 0; const gal = $("#gal");
-    gal.addEventListener("touchstart", e => tx = e.touches[0].clientX, { passive: true });
-    gal.addEventListener("touchend", e => { const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 40) go(gi + (d < 0 ? 1 : -1)); });
+    $("#gal")._go = go;
     $("#galExp").onclick = () => openLB(c, gi);
 
     // toggles

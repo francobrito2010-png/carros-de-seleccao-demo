@@ -674,3 +674,20 @@ img{-webkit-user-drag:none}
 /* O contentor do "Fale agora" nunca bloqueia toques: só o botão e o painel aberto recebem toques */
 .fab-wrap{pointer-events:none}
 .fab,.fab-wrap.open .fab-panel{pointer-events:auto}
+
+/* ---------- Portada: flechas e pontos; deslizar com o dedo ---------- */
+.hero-nav{position:absolute;z-index:3;top:42%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.4);color:#fff;display:grid;place-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .2s,transform .15s}
+.hero-nav .ic{width:22px;height:22px;stroke-width:2}
+.hero-nav.prev{left:max(14px,calc((100% - 1300px)/2))}
+.hero-nav.next{right:max(14px,calc((100% - 1300px)/2))}
+.hero-nav:active{transform:translateY(-50%) scale(.92)}
+@media (hover:hover){.hero-nav:hover{background:rgba(255,255,255,.32)}}
+.hero-dots{display:flex;gap:4px;margin-top:14px;margin-left:-6px}
+.hero-dots button{width:34px;height:22px;display:grid;place-items:center;padding:0}
+.hero-dots button::before{content:"";width:22px;height:4px;border-radius:3px;background:rgba(255,255,255,.45);transition:width .3s,background .3s}
+.hero-dots button.on::before{width:32px;background:#fff}
+.card-media,.hero,.gal{touch-action:pan-y}
+.swiping .hero-slide,.swiping .gal-img,.card-media.swiping img{transition:none}
+.hero-slide,.gal-img,.card-media img{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.swiping .hero-slide img{transition:none}
+@media (max-width:760px){.hero-nav{width:40px;height:40px;top:34%}.hero-nav .ic{width:20px;height:20px}}
