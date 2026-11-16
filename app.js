@@ -26,6 +26,7 @@
   const toast = msg => { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 2800); };
 
   /* ---------- Estado dos filtros ---------- */
+  const slug = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const F = { marca: "", modelo: "", fuel: "", seg: "", pmax: "", ano: "", chip: "todos", sort: "recente" };
   const CHIPS = [
     ["todos", "Todos"], ["Porsche", "Porsche"], ["Mercedes-Benz", "Mercedes-Benz"], ["Aston Martin", "Aston Martin"],
@@ -48,7 +49,7 @@
         case "garantia": return c.garantia === "Fábrica";
         case "nacional": return c.origem === "Nacional";
         case "vendidos": return c.status === "VENDIDO";
-        default: return c.marca === F.chip;
+        default: return slug(c.marca) === slug(F.chip);
       }
     });
     const by = {
@@ -398,13 +399,24 @@
   };
   document.addEventListener("keydown", e => {
     if (LB) { if (e.key === "Escape") closeLB(); if (e.key === "ArrowRight") { LB.i = (LB.i + 1) % LB.c.fotos.length; showLB(); } if (e.key === "ArrowLeft") { LB.i = (LB.i - 1 + LB.c.fotos.length) % LB.c.fotos.length; showLB(); } }
-    else if (e.key === "Escape") { document.body.classList.remove("menu-open"); $(".fab-wrap").classList.remove("open"); $$(".card.qv-open").forEach(c => c.classList.remove("qv-open")); }
+    else if (e.key === "Escape") { setMenu(false); $(".fab-wrap").classList.remove("open"); $$(".card.qv-open").forEach(c => c.classList.remove("qv-open")); }
   });
 
   /* ---------- Menu, FAB, formulários ---------- */
-  $("#menuBtn").onclick = () => document.body.classList.add("menu-open");
-  $("#drawerClose").onclick = $("#drawerBg").onclick = () => document.body.classList.remove("menu-open");
-  $$(".drawer-nav a").forEach(a => a.addEventListener("click", () => document.body.classList.remove("menu-open")));
+  const mm = $("#drawer");
+  const setMenu = on => { document.body.classList.toggle("menu-open", on); mm.setAttribute("aria-hidden", String(!on)); if (!on) $$(".mm-item[aria-expanded]").forEach(b => b.setAttribute("aria-expanded", "false")); };
+  $("#menuBtn").onclick = () => setMenu(true);
+  $("#drawerClose").onclick = () => setMenu(false);
+  $("#mmBrands").innerHTML = [...new Set(CARS.map(c => c.marca))].sort().map(m => {
+    const n = CARS.filter(c => c.marca === m && c.status !== "VENDIDO").length, s = slug(m);
+    const logo = document.getElementById("i-b-" + s) ? `<svg class="ic"><use href="#i-b-${s}"/></svg>` : `<span class="mm-mono">${m.split(/[\s-]+/).map(w => w[0]).join("").slice(0, 2)}</span>`;
+    return `<a class="mm-brand" href="#/viaturas/${s}">${logo}<b>${m}</b><small>${n} ${n === 1 ? "viatura" : "viaturas"}</small></a>`;
+  }).join("");
+  mm.addEventListener("click", e => {
+    const b = e.target.closest("button.mm-item");
+    if (b) { const open = b.getAttribute("aria-expanded") === "true"; $$(".mm-item[aria-expanded]").forEach(x => x.setAttribute("aria-expanded", "false")); b.setAttribute("aria-expanded", String(!open)); return; }
+    if (e.target.closest("a")) setMenu(false);
+  });
   $("#fab").onclick = () => $(".fab-wrap").classList.toggle("open");
   document.addEventListener("click", e => { if (!e.target.closest(".fab-wrap")) $(".fab-wrap").classList.remove("open"); });
   document.addEventListener("submit", e => {
@@ -424,7 +436,7 @@
     document.title = "Carros de Selecção · Stand Automóvel em Lisboa";
     if (p === "viatura" && a) return renderDetail(a);
     if (p === "viaturas") {
-      if (a) { F.chip = a; } else if (!$("#grid")) { F.chip = "todos"; }
+      if (a) { const k = CHIPS.find(([x]) => slug(x) === slug(decodeURIComponent(a))); F.chip = k ? k[0] : a; } else if (!$("#grid")) { F.chip = "todos"; }
       return renderHome("stock");
     }
     if (p === "servicos") return renderHome("servicos");
