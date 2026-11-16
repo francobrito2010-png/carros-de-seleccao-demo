@@ -586,7 +586,7 @@ main{padding-top:var(--hdr);min-height:60vh}
   .search-box{grid-template-columns:1fr 1fr;border-radius:26px;gap:4px}
   .field{padding:6px 12px}
   .field::after{right:12px}
-  .field select{font-size:15px}
+  .field select{font-size:16px}
   .search-go{grid-column:1/-1;height:52px}
   .adv{grid-template-columns:1fr 1fr}
   .sec{padding:52px 0}
