@@ -443,6 +443,21 @@
     $("#adv").classList.add("open");
   });
 
+  /* ---------- Tema (claro / preto e vermelho) ---------- */
+  const themeBtn = $("#themeBtn");
+  const applySkin = () => {
+    const noir = document.documentElement.getAttribute("data-skin") === "noir";
+    $$("img[data-logo]").forEach(i => { i.src = noir ? "assets/logo-noir.svg" : i.dataset.logo; });
+    themeBtn.innerHTML = `<svg class="ic"><use href="#i-${noir ? "sun" : "moon"}"/></svg><span>${noir ? "Modo claro" : "Modo escuro"}</span>`;
+  };
+  themeBtn.onclick = () => {
+    const noir = document.documentElement.getAttribute("data-skin") !== "noir";
+    if (noir) document.documentElement.setAttribute("data-skin", "noir"); else document.documentElement.removeAttribute("data-skin");
+    try { localStorage.setItem("skin", noir ? "noir" : "claro"); } catch (e) {}
+    applySkin();
+  };
+  applySkin();
+
   /* ---------- Router ---------- */
   function route() {
     const h = location.hash.replace(/^#\/?/, "");
