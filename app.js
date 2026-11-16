@@ -30,7 +30,7 @@
   const F = { marca: "", modelo: "", fuel: "", seg: "", pmax: "", ano: "", chip: "todos", sort: "recente" };
   const CHIPS = [
     ["todos", "Todos"], ["Porsche", "Porsche"], ["Mercedes-Benz", "Mercedes-Benz"], ["Aston Martin", "Aston Martin"],
-    ["suv", "SUV"], ["cabrio", "Cabrio"], ["garantia", "Garantia de fábrica"], ["nacional", "Nacional"], ["vendidos", "Vendidos"]
+    ["suv", "SUV"], ["cabrio", "Cabrio"], ["garantia", "Garantia de fábrica"], ["nacional", "Nacional"], ["classicos", "Clássicos"], ["vendidos", "Vendidos"]
   ];
   const fuelGroup = c => /Híbrido/i.test(c.combustivel) ? "Híbrido" : /Gasóleo/i.test(c.combustivel) ? "Gasóleo" : /Elé/i.test(c.combustivel) ? "Elétrico" : "Gasolina";
   const segGroup = c => /SUV/i.test(c.segmento) ? "SUV" : c.segmento.split(" ")[0];
@@ -48,6 +48,7 @@
         case "cabrio": return /Cabrio/i.test(c.segmento);
         case "garantia": return c.garantia === "Fábrica";
         case "nacional": return c.origem === "Nacional";
+        case "classicos": return ano(c) <= 2005;
         case "vendidos": return c.status === "VENDIDO";
         default: return slug(c.marca) === slug(F.chip);
       }
@@ -175,9 +176,9 @@
       <div class="wrap">
         <div class="sec-head"><h2>Serviços</h2><span class="eyebrow">Simples, rápido e transparente</span></div>
         <div class="services">
-          <div class="svc"><div class="svc-ic">${ic("euro")}</div><h3>Financiamento</h3><p>Crédito automóvel à sua medida, com simulação rápida e sem compromisso.</p><a href="#/contactos">Simular ${ic("right")}</a></div>
-          <div class="svc"><div class="svc-ic">${ic("key")}</div><h3>Compramos o seu carro</h3><p>Avaliamos a sua viatura e fazemos uma proposta justa, com pagamento imediato.</p><a href="#/contactos">Pedir avaliação ${ic("right")}</a></div>
-          <div class="svc"><div class="svc-ic">${ic("swap")}</div><h3>Retoma</h3><p>Entregue o seu carro actual como parte do pagamento da próxima viatura.</p><a href="#/contactos">Saber mais ${ic("right")}</a></div>
+          <div class="svc"><div class="svc-ic">${ic("euro")}</div><h3>Financiamento</h3><p>Crédito automóvel à sua medida, com simulação rápida e sem compromisso.</p><a href="#/credito">Pedir financiamento ${ic("right")}</a></div>
+          <div class="svc"><div class="svc-ic">${ic("key")}</div><h3>Compramos o seu carro</h3><p>Avaliamos a sua viatura e apresentamos uma proposta, sem compromisso.</p><a href="#/compramos">Pedir avaliação ${ic("right")}</a></div>
+          <div class="svc"><div class="svc-ic">${ic("search")}</div><h3>Consultadoria</h3><p>Não encontra o carro que procura? Nós procuramos, verificamos e tratamos de tudo.</p><a href="#/consultadoria">Pedir ajuda ${ic("right")}</a></div>
           <div class="svc"><div class="svc-ic">${ic("shield")}</div><h3>Garantia</h3><p>Viaturas com garantia de fábrica ou garantia do stand. Compre com total tranquilidade.</p><a href="#/viaturas/garantia">Ver viaturas ${ic("right")}</a></div>
         </div>
         <div class="trust">
@@ -339,6 +340,7 @@
             <div class="obs" id="obs">${(c.obs || defaultObs(c)).replace(/</g, "&lt;")}</div>
             <div class="toggle-row"><button class="toggle" data-tg="obs" data-l="observações">${ic("plus")}Ver mais observações</button></div>
             <div class="d-tools">
+              <a class="btn btn-primary btn-pill-sm" href="#/credito/${c.id}">${ic("euro")}Financiar esta viatura</a>
               <button class="btn btn-ghost btn-pill-sm" id="printBtn">${ic("print")}Criar PDF / Imprimir</button>
               <button class="btn btn-ghost btn-pill-sm" id="shareBtn">${ic("share")}Partilhar</button>
             </div>
@@ -440,12 +442,15 @@
   $("#fab").onclick = () => $(".fab-wrap").classList.toggle("open");
   $("#fabClose").onclick = () => $(".fab-wrap").classList.remove("open");
   $("#fabTeam").addEventListener("click", e => { if (e.target.closest("a")) $(".fab-wrap").classList.remove("open"); });
-  /* Serviços: abre ao passar o rato; em ecrãs tácteis abre ao primeiro toque */
-  const svcDd = $("#svcDd"), svcBtn = svcDd.querySelector(".hdr-btn");
-  const setDd = on => { svcDd.classList.toggle("open", on); svcBtn.setAttribute("aria-expanded", String(on)); };
-  svcBtn.addEventListener("click", e => { if (matchMedia("(hover:none)").matches && !svcDd.classList.contains("open")) { e.preventDefault(); setDd(true); } else { setDd(false); svcBtn.blur(); } });
-  svcDd.querySelector(".dd").addEventListener("click", e => { if (e.target.closest("a")) { setDd(false); document.activeElement && document.activeElement.blur(); } });
-  document.addEventListener("click", e => { if (!e.target.closest("#svcDd")) setDd(false); });
+  /* Menus da barra superior: abrem ao passar o rato; em ecrãs tácteis abrem ao primeiro toque */
+  $$(".hdr-dd").forEach(dd => {
+    const btn = dd.querySelector(".hdr-btn");
+    const set = on => { dd.classList.toggle("open", on); btn.setAttribute("aria-expanded", String(on)); };
+    dd._set = set;
+    btn.addEventListener("click", e => { if (matchMedia("(hover:none)").matches && !dd.classList.contains("open")) { e.preventDefault(); $$(".hdr-dd").forEach(o => o._set && o._set(false)); set(true); } else { set(false); btn.blur(); } });
+    dd.querySelector(".dd").addEventListener("click", e => { if (e.target.closest("a")) { set(false); document.activeElement && document.activeElement.blur(); } });
+  });
+  document.addEventListener("click", e => { $$(".hdr-dd").forEach(dd => { if (!dd.contains(e.target)) dd._set(false); }); });
   document.addEventListener("click", e => { if (!e.target.closest(".fab-wrap")) $(".fab-wrap").classList.remove("open"); });
   document.addEventListener("submit", e => {
     if (!e.target.matches("[data-demo-form]")) return;
@@ -456,6 +461,128 @@
     const el = $("#searchForm"); scrollTo({ top: el.getBoundingClientRect().top + scrollY - 140, behavior: "smooth" });
     $("#adv").classList.add("open");
   });
+
+  /* ---------- Páginas de serviço ---------- */
+  const MARCAS = ["Abarth","Alfa Romeo","Alpine","Aston Martin","Audi","Bentley","BMW","BYD","Citroën","Cupra","Dacia","DS","Ferrari","Fiat","Ford","Honda","Hyundai","Jaguar","Jeep","Kia","Lamborghini","Land Rover","Lexus","Maserati","Mazda","McLaren","Mercedes-Benz","MINI","Mitsubishi","Nissan","Opel","Peugeot","Porsche","Renault","Rolls-Royce","Seat","Skoda","Smart","Suzuki","Tesla","Toyota","Volkswagen","Volvo"];
+  const fl = (label, ctrl, req, cls = "") => `<label class="fl ${cls}"><span>${label}${req ? " <b>*</b>" : ""}</span>${ctrl}</label>`;
+  const inp = (label, type = "text", req = false, extra = "", cls = "") => fl(label, `<input type="${type}" placeholder="Escreva aqui" ${req ? "required" : ""} ${extra}>`, req, cls);
+  const sel = (label, opts, req = false, extra = "", cls = "") => fl(label, `<select ${req ? "required" : ""} ${extra}><option value="">Selecione</option>${opts.map(o => `<option>${o}</option>`).join("")}</select>`, req, cls);
+  const card = (n, title, sub, body) => `<fieldset class="fm-card"><div class="fm-head"><i>${n}</i><h2>${title}${sub ? `<small>${sub}</small>` : ""}</h2></div>${body}</fieldset>`;
+  const endRow = btn => `<div class="fm-end"><label class="check"><input type="checkbox" required> Li e aceito os Termos de Utilização e Proteção de Dados</label><button class="btn btn-primary" type="submit">${btn}</button></div><p class="fm-note">Os campos marcados com * são de preenchimento obrigatório.</p>`;
+  const steps = list => `<div class="pg-box"><h3>Como funciona</h3><ol class="pg-steps">${list.map(([t, d], i) => `<li><i>${i + 1}</i><div><b>${t}</b><span>${d}</span></div></li>`).join("")}</ol></div>`;
+  const helpBox = () => `<div class="pg-box dk"><h3>Prefere falar connosco?</h3><p>A nossa equipa esclarece todas as dúvidas, sem compromisso.</p><a class="tel" href="tel:${S.telefoneLink}">${ic("phone")}${S.telefone}</a><a class="lnk" href="#/contactos">Ver todos os contactos ${ic("right")}</a></div>`;
+  const shell = (eyebrow, title, lead, form, aside) => `
+    <section class="pg-hero"><div class="wrap">
+      <nav class="pg-crumb" aria-label="Navegação"><a href="#/">Início</a>${ic("right")}<a href="#/servicos">Serviços</a>${ic("right")}<span>${title}</span></nav>
+      <span class="eyebrow">${eyebrow}</span><h1>${title}</h1><p>${lead}</p>
+    </div></section>
+    <section class="pg"><div class="wrap pg-grid"><form class="fm" data-demo-form>${form}</form><aside class="pg-aside">${aside}</aside></div></section>`;
+
+  function renderPage(kind, arg) {
+    if (kind === "credito") {
+      const stock = CARS.filter(c => c.status !== "VENDIDO");
+      app.innerHTML = shell("Financiamento à medida", "Intermediação de Crédito",
+        "Escolha a viatura, preencha os seus dados e nós tratamos do processo junto das entidades financeiras. Resposta rápida e sem compromisso.",
+        card("01", "Viatura", "Escolha a viatura que pretende financiar",
+          `<div class="fm-grid">
+            ${fl("Selecione a viatura", `<select id="crCar" required><option value="">Escolher carro</option>${stock.map(c => `<option value="${c.id}">${c.marca} ${c.modelo}${c.preco ? " — " + num(c.preco) + " €" : ""}</option>`).join("")}<option value="outra">Nenhuma das viaturas acima, pretendo outra viatura</option></select>`, true, "full")}
+          </div>
+          <div class="fm-pick" id="crPick" aria-live="polite"></div>
+          <div class="fm-grid" style="margin-top:16px">
+            ${inp("Entrada inicial (€)", "number", false, 'min="0" step="500" inputmode="numeric"')}
+            ${sel("Prazo pretendido", ["24 meses", "36 meses", "48 meses", "60 meses", "72 meses", "84 meses", "96 meses", "120 meses"])}
+          </div>`) +
+        card("02", "Dados pessoais", "Titular do contrato",
+          `<div class="fm-grid">
+            ${inp("Nome", "text", true, 'autocomplete="name"', "full")}
+            ${inp("Email", "email", true, 'autocomplete="email"')}
+            ${inp("Telemóvel", "tel", true, 'autocomplete="tel" inputmode="tel"')}
+            ${inp("Morada completa", "text", false, 'autocomplete="street-address"', "full")}
+            ${inp("Código postal", "text", false, 'autocomplete="postal-code" placeholder="0000-000"')}
+            ${inp("Localidade")}
+            ${sel("Estado civil", ["Casado/a", "Em união de facto", "Solteiro/a", "Divorciado/a", "Separado/a", "Viúvo/a"])}
+            ${inp("Nacionalidade")}
+            ${inp("Data de nascimento", "date")}
+            ${inp("N.º de identificação (CC / Passaporte)")}
+            ${inp("N.º de contribuinte", "text", false, 'inputmode="numeric"')}
+            ${inp("IBAN", "text", false, 'placeholder="PT50 ..."')}
+          </div>`) +
+        card("03", "Situação profissional e habitação", "Ajuda-nos a encontrar a melhor proposta",
+          `<div class="fm-grid">
+            ${inp("Profissão")}
+            ${inp("Nome da empresa")}
+            ${inp("Remuneração líquida mensal (€)", "number", false, 'min="0" inputmode="numeric"')}
+            ${sel("Tipo de contrato", ["Efectivo", "A prazo", "Conta própria", "Recibos verdes", "Outro"])}
+            ${inp("Anos de serviço", "number", false, 'min="0" inputmode="numeric"')}
+            ${sel("Tipo de habitação", ["Arrendada", "Própria com hipoteca", "Própria sem hipoteca", "Familiar"])}
+          </div>
+          <button type="button" class="fm-add" id="crAdd">${ic("plus")}<span>Adicionar outro titular / fiador</span></button>
+          <div class="fm-more" id="crMore"><div class="fm-grid">
+            ${inp("Nome do 2.º titular / fiador", "text", false, "", "full")}
+            ${inp("Telemóvel", "tel")}
+            ${inp("N.º de contribuinte")}
+            ${inp("Profissão")}
+            ${inp("Remuneração líquida mensal (€)", "number", false, 'min="0"')}
+          </div></div>`) +
+        card("04", "Mensagem e documentos", "Opcional: junte recibos de vencimento ou outros documentos",
+          `<div class="fm-grid">
+            ${fl("Mensagem", `<textarea required placeholder="Escreva aqui"></textarea>`, true, "full")}
+            ${fl("Carregar ficheiros", `<input type="file" multiple>`, false, "full")}
+          </div>${endRow("Enviar pedido")}`),
+        steps([["Escolha a viatura", "Selecione um carro do nosso stock ou diga-nos qual procura."], ["Preencha os seus dados", "Quanto mais completa a informação, mais rápida a resposta."], ["Receba a proposta", "Analisamos o pedido e contactamos com as condições."]]) +
+        helpBox() + `<p class="pg-legal">A Carros de Selecção disponibiliza serviços de intermediação de crédito. O pedido não tem qualquer compromisso e está sujeito à análise e aprovação da entidade financeira. <a href="https://www.bportugal.pt/intermediariocreditofar/carros-de-seleccao-sociedade-automovel-lda" target="_blank" rel="noopener">Consultar registo no Banco de Portugal</a></p>`);
+      const pick = $("#crPick"), car = $("#crCar");
+      const showPick = () => {
+        const c = CARS.find(x => x.id === car.value);
+        pick.classList.toggle("on", !!c);
+        pick.innerHTML = c ? `<img src="${img(c, 0)}" alt="${c.marca} ${c.modelo}"><div><b>${c.marca}</b><span>${c.modelo}</span><small>${regFmt(c.registo)} · ${num(c.km)} km · ${c.combustivel}</small><div class="pr">${c.preco ? num(c.preco) + " €" : "Sob consulta"}</div><a href="#/viatura/${c.id}">Ver ficha da viatura ${ic("right")}</a></div>` : "";
+      };
+      if (arg && CARS.some(c => c.id === arg)) car.value = arg;
+      car.onchange = showPick; showPick();
+      $(".fm").addEventListener("reset", () => setTimeout(showPick));
+      $("#crAdd").onclick = () => { const on = $("#crMore").classList.toggle("on"); $("#crAdd span").textContent = on ? "Remover 2.º titular / fiador" : "Adicionar outro titular / fiador"; };
+      document.title = "Intermediação de Crédito | " + S.nome;
+    } else if (kind === "consultadoria") {
+      const extras = ["GPS", "Caixa automática", "Faróis LED", "Faróis Xénon / Bi-Xénon", "Cruise control", "Sensores de estacionamento", "Câmara traseira", "Estofos em pele", "Ar condicionado", "Tecto de abrir", "Apple CarPlay / Android Auto"];
+      app.innerHTML = shell("Procuramos por si", "Consultadoria Automóvel",
+        "Não encontrou a viatura ideal no nosso stock? Diga-nos o que procura e nós encontramos, verificamos o histórico e tratamos de todo o processo.",
+        card("01", "Informação pessoal", "", `<div class="fm-grid">${inp("Nome", "text", true, 'autocomplete="name"', "full")}${inp("Email", "email", true, 'autocomplete="email"')}${inp("Telemóvel", "tel", true, 'autocomplete="tel"')}</div>`) +
+        card("02", "Viatura pretendida", "Descreva o carro que procura",
+          `<div class="fm-grid">
+            ${fl("Marca", `<input list="dlMarcas" required placeholder="Escreva aqui"><datalist id="dlMarcas">${MARCAS.map(m => `<option value="${m}">`).join("")}</datalist>`, true)}
+            ${inp("Modelo", "text", true)}
+            ${inp("Versão")}
+            ${inp("Orçamento máximo (€)", "number", false, 'min="0" step="1000" inputmode="numeric"')}
+            ${fl(`Quilómetros máximos: <output id="oKm">150 000 km</output>`, `<input type="range" min="0" max="300000" step="5000" value="150000" data-out="oKm" data-suf=" km">`)}
+            ${fl(`Ano mínimo: <output id="oAno">2015</output>`, `<input type="range" min="1950" max="${new Date().getFullYear()}" step="1" value="2015" data-out="oAno" data-raw="1">`)}
+          </div>`) +
+        card("03", "Extras pretendidos", "Selecione os que são importantes para si", `<div class="xchips">${extras.map(x => `<label class="xchip"><input type="checkbox"><span>${x}</span></label>`).join("")}</div>`) +
+        card("04", "Mensagem", "", `<div class="fm-grid">${fl("Mensagem", `<textarea required placeholder="Cor preferida, urgência, outras preferências..."></textarea>`, true, "full")}</div>${endRow("Enviar pedido")}`),
+        steps([["Diga-nos o que procura", "Marca, modelo, orçamento e os extras de que não abdica."], ["Nós procuramos e verificamos", "Seleccionamos viaturas e confirmamos histórico e estado."], ["Apresentamos as opções", "Recebe as propostas e decide com toda a informação."]]) + helpBox());
+      document.title = "Consultadoria Automóvel | " + S.nome;
+    } else {
+      app.innerHTML = shell("Avaliação sem compromisso", "Compramos o seu Carro",
+        "Quer vender a sua viatura? Envie-nos os dados e algumas fotografias. Avaliamos e apresentamos uma proposta, também em regime de retoma.",
+        card("01", "Informação da viatura", "",
+          `<div class="fm-grid">
+            ${sel("Marca", [...MARCAS, "Outra"], true)}
+            ${inp("Modelo", "text", true)}
+            ${inp("Versão")}
+            ${sel("Combustível", ["Gasolina", "Gasóleo", "Híbrido", "Híbrido Plug-In", "Eléctrico", "GPL"])}
+            ${inp("Matrícula", "text", false, 'placeholder="AA-00-AA" style="text-transform:uppercase"')}
+            ${inp("Ano", "number", false, `min="1950" max="${new Date().getFullYear()}" inputmode="numeric"`)}
+            ${inp("Quilómetros", "number", false, 'min="0" step="1000" inputmode="numeric"')}
+            ${sel("Pretende", ["Vender a viatura", "Dar em retoma por outra viatura"])}
+          </div>`) +
+        card("02", "Fotografias", "Exterior, interior e painel de instrumentos ajudam a uma avaliação mais rigorosa", `<div class="fm-grid">${fl("Carregar fotografias", `<input type="file" accept="image/*" multiple>`, false, "full")}</div>`) +
+        card("03", "Os seus contactos", "", `<div class="fm-grid">${inp("Nome", "text", true, 'autocomplete="name"', "full")}${inp("Email", "email", true, 'autocomplete="email"')}${inp("Telemóvel", "tel", true, 'autocomplete="tel"')}</div>`) +
+        card("04", "Mensagem", "", `<div class="fm-grid">${fl("Mensagem", `<textarea required placeholder="Estado geral, revisões, número de donos..."></textarea>`, true, "full")}</div>${endRow("Pedir avaliação")}`),
+        steps([["Envie os dados da viatura", "Marca, modelo, quilómetros e algumas fotografias."], ["Avaliamos a sua viatura", "A nossa equipa analisa e, se necessário, agenda uma visita."], ["Receba a nossa proposta", "Proposta de compra ou valor de retoma, sem compromisso."]]) + helpBox());
+      document.title = "Compramos o seu Carro | " + S.nome;
+    }
+    $$("[data-out]", app).forEach(r => { const upd = () => { $("#" + r.dataset.out).textContent = r.dataset.raw ? r.value : num(+r.value) + (r.dataset.suf || ""); }; r.addEventListener("input", upd); $(".fm").addEventListener("reset", () => setTimeout(upd)); });
+    window.scrollTo(0, 0);
+  }
 
   /* ---------- Tema (claro / preto e vermelho) ---------- */
   const themeBtn = $("#themeBtn");
@@ -482,6 +609,7 @@
       if (a) { const k = CHIPS.find(([x]) => slug(x) === slug(decodeURIComponent(a))); F.chip = k ? k[0] : a; } else if (!$("#grid")) { F.chip = "todos"; }
       return renderHome("stock");
     }
+    if (p === "credito" || p === "consultadoria" || p === "compramos") return renderPage(p, a);
     if (p === "servicos") return renderHome("servicos");
     if (p === "empresa") return renderHome("empresa");
     if (p === "contactos") { if (!$("#grid")) renderHome(); return requestAnimationFrame(() => $("#contactos").scrollIntoView()); }

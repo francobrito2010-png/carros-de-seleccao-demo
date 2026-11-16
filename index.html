@@ -20,15 +20,21 @@
   </button>
   <a href="#/" class="logo" aria-label="Carros de Selecção — início"><img src="assets/logo.svg" data-logo="assets/logo.svg" alt="Carros de Selecção"></a>
   <nav class="hdr-right">
-    <a class="hdr-btn" href="#/viaturas"><svg class="ic"><use href="#i-list"/></svg><span>Viaturas</span></a>
+    <div class="hdr-dd">
+      <a class="hdr-btn" href="#/viaturas" aria-haspopup="true" aria-expanded="false"><svg class="ic"><use href="#i-list"/></svg><span>Viaturas</span></a>
+      <div class="dd"><div class="dd-box">
+        <a href="#/viaturas"><svg class="ic"><use href="#i-car"/></svg>Automóveis</a>
+        <a href="#/viaturas/classicos"><svg class="ic"><use href="#i-star"/></svg>Clássicos</a>
+        <a href="#/viaturas/vendidos"><svg class="ic"><use href="#i-check"/></svg>Vendidos</a>
+      </div></div>
+    </div>
     <button class="hdr-btn" data-open-search><svg class="ic"><use href="#i-search"/></svg><span>Pesquisar</span></button>
-    <div class="hdr-dd" id="svcDd">
+    <div class="hdr-dd">
       <a class="hdr-btn" href="#/servicos" aria-haspopup="true" aria-expanded="false"><svg class="ic"><use href="#i-tool"/></svg><span>Serviços</span></a>
       <div class="dd"><div class="dd-box">
-        <a href="#/servicos"><svg class="ic"><use href="#i-euro"/></svg>Financiamento</a>
-        <a href="#/servicos"><svg class="ic"><use href="#i-award"/></svg>Intermediação de Crédito</a>
-        <a href="#/servicos"><svg class="ic"><use href="#i-key"/></svg>Compramos o seu Carro</a>
-        <a href="#/servicos"><svg class="ic"><use href="#i-swap"/></svg>Retomas</a>
+        <a href="#/credito"><svg class="ic"><use href="#i-euro"/></svg>Intermediação de Crédito</a>
+        <a href="#/consultadoria"><svg class="ic"><use href="#i-search"/></svg>Consultadoria Automóvel</a>
+        <a href="#/compramos"><svg class="ic"><use href="#i-key"/></svg>Compramos o seu Carro</a>
         <a href="#/viaturas/garantia"><svg class="ic"><use href="#i-shield"/></svg>Garantia</a>
       </div></div>
     </div>
@@ -54,6 +60,7 @@
             <a href="#/viaturas/cabrio">Cabrio</a>
             <a href="#/viaturas/garantia">Garantia de fábrica</a>
             <a href="#/viaturas/nacional">Nacionais</a>
+            <a href="#/viaturas/classicos">Clássicos</a>
             <a href="#/viaturas/vendidos">Vendidos</a>
           </div>
           <p class="mm-cap">Por marca</p>
@@ -64,10 +71,10 @@
         <button class="mm-item" aria-expanded="false"><i>02</i><b>Serviços</b><svg class="ic"><use href="#i-right"/></svg></button>
         <div class="mm-sub"><div class="mm-sub-in">
           <div class="mm-links">
-            <a href="#/servicos">Financiamento</a>
-            <a href="#/servicos">Compramos o seu carro</a>
-            <a href="#/servicos">Retomas</a>
-            <a href="#/servicos">Garantia</a>
+            <a href="#/credito">Intermediação de Crédito</a>
+            <a href="#/consultadoria">Consultadoria Automóvel</a>
+            <a href="#/compramos">Compramos o seu carro</a>
+            <a href="#/viaturas/garantia">Garantia</a>
           </div>
         </div></div>
       </div>
@@ -140,7 +147,7 @@
       <a href="#/contactos">Política de Privacidade</a>
       <a href="#/contactos">Cookies</a>
       <a href="#/contactos">Resolução de Conflitos</a>
-      <a href="#/contactos">Intermediação de Crédito</a>
+      <a href="#/credito">Intermediação de Crédito</a>
     </nav>
     <p class="ftr-nif">NIF 506358089</p>
     <a class="ftr-brand" href="#/" aria-label="Início"><img src="assets/logo-light.svg" data-logo="assets/logo-light.svg" alt="Carros de Selecção" class="ftr-logo"></a>
