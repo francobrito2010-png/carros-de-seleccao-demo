@@ -51,6 +51,22 @@ h1,h2,h3{font-family:var(--ff-h);letter-spacing:-.02em;line-height:1.1}
 .logo img{height:34px;width:auto}
 .hdr-right{justify-self:end;display:flex;gap:6px}
 
+/* ---------- Cinta de marcas ---------- */
+.brands{background:var(--navy-dd);color:#fff;padding:54px 0 50px;overflow:hidden}
+.brands-ttl{display:flex;align-items:center;justify-content:center;gap:18px;font-family:var(--ff-h);font-size:12.5px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;margin-bottom:38px;padding:0 16px;text-align:center}
+.brands-ttl::before,.brands-ttl::after{content:"";width:44px;height:2px;background:#f5923a;flex:none}
+.brands-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.brands-track{display:flex;width:max-content;animation:brands-run 48s linear infinite}
+.brands-view:hover .brands-track,.brands-view:focus-within .brands-track{animation-play-state:paused}
+.brand-it{flex:none;width:220px;display:flex;flex-direction:column;align-items:center;gap:16px;color:#fff;opacity:.6;transition:opacity .25s,transform .25s}
+.brand-it .ic{width:58px;height:58px}
+.brand-it span{font-family:var(--ff-h);font-size:11.5px;font-weight:600;letter-spacing:.28em;text-transform:uppercase}
+.brand-it:hover,.brand-it:focus-visible{opacity:1;transform:translateY(-4px)}
+.brand-it.has{opacity:.92}
+@keyframes brands-run{to{transform:translateX(-50%)}}
+@media (max-width:760px){.brands{padding:40px 0 36px}.brands-ttl{font-size:11px;letter-spacing:.22em;margin-bottom:28px}.brands-ttl::before,.brands-ttl::after{width:24px}.brand-it{width:150px;gap:12px}.brand-it .ic{width:44px;height:44px}.brand-it span{font-size:10px;letter-spacing:.2em}.brands-track{animation-duration:36s}}
+@media (prefers-reduced-motion:reduce){.brands-track{animation:none}.brands-view{overflow-x:auto}}
+
 /* ---------- Menu (ecrã inteiro) ---------- */
 .mm{position:fixed;inset:0;z-index:61;color:#fff;overflow-y:auto;overscroll-behavior:contain;
   background:radial-gradient(120% 90% at 0% 0%,#0a4f9a 0%,transparent 55%),radial-gradient(90% 80% at 100% 100%,#032a57 0%,transparent 60%),var(--navy-dd);

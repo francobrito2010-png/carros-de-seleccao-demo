@@ -66,6 +66,18 @@
   const modelBase = m => m.split(" ")[0];
 
   /* ---------- Card ---------- */
+  /* ---------- Cinta de marcas ---------- */
+  const BRANDS = ["Porsche", "Ferrari", "Mercedes-Benz", "Lamborghini", "Aston Martin", "Bentley", "BMW", "McLaren", "Audi", "Land Rover", "Maserati"];
+  function brandsHTML() {
+    const inStock = new Set(CARS.filter(c => c.status !== "VENDIDO").map(c => c.marca));
+    const list = [...new Set([...BRANDS, ...inStock])].filter(m => document.getElementById("i-b-" + slug(m)));
+    const item = (m, hid) => `<a class="brand-it ${inStock.has(m) ? "has" : ""}" href="${inStock.has(m) ? "#/viaturas/" + slug(m) : "#/contactos"}" title="${inStock.has(m) ? "Ver " + m + " em stock" : m + " — sob consulta"}" ${hid ? 'tabindex="-1" aria-hidden="true"' : ""}><svg class="ic"><use href="#i-b-${slug(m)}"/></svg><span>${m}</span></a>`;
+    return `<section class="brands" aria-label="Marcas">
+      <p class="brands-ttl">As melhores marcas do mundo</p>
+      <div class="brands-view"><div class="brands-track">${list.map(m => item(m, 0)).join("")}${list.map(m => item(m, 1)).join("")}</div></div>
+    </section>`;
+  }
+
   function cardHTML(c) {
     const n = Math.min(c.fotos.length, 5);
     return `<article class="card ${c.status === "VENDIDO" ? "is-sold" : ""}" data-id="${c.id}">
@@ -139,6 +151,8 @@
         <a class="latest-item" href="#/viatura/${c.id}"><img src="${img(c, 0)}" alt="" loading="lazy"><div><b>${c.marca}</b><span>${c.modelo}</span></div></a>`).join("")}
       </div>
     </section>
+
+    ${brandsHTML()}
 
     <section class="sec" id="stock">
       <div class="wrap">
