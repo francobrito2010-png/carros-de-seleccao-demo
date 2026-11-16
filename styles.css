@@ -577,7 +577,7 @@ main{padding-top:var(--hdr);min-height:60vh}
   :root{--hdr:62px}
   .hdr{padding:0 8px}
   .hdr-btn span{display:none}
-  .hdr-btn{padding:8px}
+  .hdr-btn{padding:8px 6px}
   .hdr-right{gap:0}
   .logo img{height:22px}
   .hero{height:62vh;min-height:420px}
