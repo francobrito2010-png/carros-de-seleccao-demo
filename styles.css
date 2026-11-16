@@ -670,3 +670,7 @@ img{-webkit-user-drag:none}
 @media (max-width:760px),(pointer:coarse){
   html body input,html body select,html body textarea{font-size:16px}
 }
+
+/* O contentor do "Fale agora" nunca bloqueia toques: só o botão e o painel aberto recebem toques */
+.fab-wrap{pointer-events:none}
+.fab,.fab-wrap.open .fab-panel{pointer-events:auto}
