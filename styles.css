@@ -85,6 +85,48 @@ h1,h2,h3{font-family:var(--ff-h);letter-spacing:-.02em;line-height:1.1}
 .mm-theme .ic{width:20px;height:20px}
 .mm-theme+.mm-soc{margin-top:0}
 
+/* ---------- Desdobrável Serviços ---------- */
+.hdr-dd{position:relative;display:flex}
+.hdr-dd>.hdr-btn{position:relative}
+.hdr-dd>.hdr-btn::after{content:"";position:absolute;left:10px;right:10px;bottom:-9px;height:3px;border-radius:3px;background:var(--navy);transform:scaleX(0);transition:transform .25s}
+.dd{position:absolute;top:100%;right:-76px;padding-top:17px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .22s,transform .22s,visibility 0s .22s;z-index:5}
+.dd-box{min-width:270px;background:var(--surface);border-radius:0 0 var(--r-md) var(--r-md);box-shadow:0 24px 44px -18px rgba(var(--ov),.45);padding:8px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.dd-box a{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:12px;font-family:var(--ff-h);font-size:14.5px;font-weight:600;color:var(--ink);white-space:nowrap;transition:background .2s,color .2s,padding .2s}
+.dd-box a .ic{width:22px;height:22px;color:var(--navy)}
+.dd-box a:hover,.dd-box a:focus-visible{background:var(--bg);color:var(--navy);padding-left:20px}
+.hdr-dd.open .dd,.hdr-dd:focus-within .dd{opacity:1;visibility:visible;transform:none;transition:opacity .22s,transform .22s}
+.hdr-dd.open>.hdr-btn,.hdr-dd:focus-within>.hdr-btn{color:var(--navy)}
+.hdr-dd.open>.hdr-btn::after,.hdr-dd:focus-within>.hdr-btn::after{transform:none}
+@media (hover:hover){
+  .hdr-dd:hover .dd{opacity:1;visibility:visible;transform:none;transition:opacity .22s,transform .22s}
+  .hdr-dd:hover>.hdr-btn{color:var(--navy)}
+  .hdr-dd:hover>.hdr-btn::after{transform:none}
+}
+@media (max-width:760px){.dd{right:-46px;padding-top:15px}.dd-box{min-width:240px}.hdr-dd>.hdr-btn::after{bottom:-7px}}
+
+/* ---------- Painel "Fale agora" ---------- */
+.fab-panel{width:330px;max-width:calc(100vw - 28px);background:var(--surface);border-radius:var(--r-md);overflow:hidden;box-shadow:0 24px 60px -16px rgba(var(--ov),.5);transform:translateY(10px) scale(.96);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,transform .25s,visibility 0s .25s;transform-origin:bottom right}
+.fab-wrap.open .fab-panel{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s,transform .25s}
+.fab-head{position:relative;background:var(--navy);color:#fff;padding:20px 22px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.fab-head strong{font-family:var(--ff-h);font-size:18px}
+.fab-head span{font-size:13px;color:#fff;opacity:.85;max-width:230px}
+.fab-x{position:absolute;top:14px;left:14px;width:32px;height:32px;display:grid;place-items:center;color:#fff;border-radius:50%;transition:background .2s}
+.fab-x:hover{background:rgba(255,255,255,.18)}
+.fab-team{max-height:min(380px,56vh);overflow-y:auto}
+.fab-team a{display:flex;gap:14px;align-items:center;padding:13px 20px;border-bottom:1px solid var(--line);transition:background .2s}
+.fab-team a:last-child{border-bottom:0}
+.fab-team a:hover{background:var(--bg)}
+.fab-av{flex:none;width:46px;height:46px;border-radius:50%;background:var(--sky-l);color:var(--navy);display:grid;place-items:center;font-family:var(--ff-h);font-weight:800;font-size:15px;overflow:hidden}
+.fab-av img{width:100%;height:100%;object-fit:cover}
+.fab-av .ic{width:22px;height:22px}
+.fab-tx{min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.fab-tx small{color:var(--muted);font-size:12px;font-weight:500}
+.fab-tx b{font-family:var(--ff-h);font-size:15px;font-weight:700;overflow-wrap:anywhere}
+.fab-tx b.sm{font-size:13px}
+.fab-tx em{font-style:normal;font-size:12.5px;color:var(--ink-2)}
+.fab-go{margin-left:auto;flex:none;color:var(--navy)}
+.fab-go .ic{width:20px;height:20px}
+
 /* ---------- Cinta de marcas ---------- */
 .brands{background:var(--navy-dd);color:#fff;padding:54px 0 50px;overflow:hidden}
 .brands-ttl{display:flex;align-items:center;justify-content:center;gap:18px;font-family:var(--ff-h);font-size:12.5px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;margin-bottom:38px;padding:0 16px;text-align:center}
@@ -355,14 +397,6 @@ main{padding-top:var(--hdr);min-height:60vh}
 .fab{width:68px;height:68px;border-radius:50%;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 14px 30px -8px rgba(2,40,90,.55);font-size:9.5px;font-weight:700;transition:transform .2s}
 .fab:hover{transform:scale(1.06)}
 .fab .ic{width:24px;height:24px}
-.fab-panel{width:290px;background:var(--surface);border-radius:var(--r-md);overflow:hidden;box-shadow:0 20px 50px -15px rgba(var(--ov),.4);transform:translateY(10px) scale(.96);opacity:0;pointer-events:none;transition:all .25s;transform-origin:bottom right}
-.fab-wrap.open .fab-panel{transform:none;opacity:1;pointer-events:auto}
-.fab-head{background:var(--navy);color:#fff;padding:16px 18px;display:flex;flex-direction:column}
-.fab-head span{font-size:13px;color:var(--sky)}
-.fab-panel a{display:flex;gap:12px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
-.fab-panel a:hover{background:var(--bg)}
-.fab-panel a .ic{color:var(--navy)}
-.fab-panel small{display:block;color:var(--muted);font-weight:500;font-size:11px}
 
 /* Toast */
 .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;transition:all .3s;z-index:90;pointer-events:none;max-width:calc(100% - 32px);text-align:center}

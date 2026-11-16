@@ -2,6 +2,14 @@
    status: '' | 'VENDIDO' | 'RESERVADO'  (VENDIDO/RESERVADO aqui são apenas de demonstração) */
 window.STAND = {
   nome: "Carros de Selecção",
+  // Contactos publicados no site do stand (sem nomes de vendedores). Quando houver nomes e fotos, basta preencher "nome" e "foto".
+  equipa: [
+    { funcao: "Vendas", nome: "Linha comercial", info: "912 043 894", canal: "WhatsApp", href: "https://api.whatsapp.com/send?phone=351912043894", icon: "wa" },
+    { funcao: "Vendas", nome: "Linha comercial 2", info: "963 471 338", canal: "Telemóvel", href: "tel:+351963471338", icon: "phone" },
+    { funcao: "Stand", nome: "Telefone fixo", info: "217 996 060", canal: "Rede fixa nacional", href: "tel:+351217996060", icon: "phone" },
+    { funcao: "Mensagem", nome: "Messenger", info: "Resposta por chat", canal: "Facebook", href: "https://www.facebook.com/messages/t/carrosdeselecao/", icon: "chat" },
+    { funcao: "Email", nome: "vendas@carrosdeseleccao.pt", info: "", canal: "", href: "mailto:vendas@carrosdeseleccao.pt", icon: "mail" }
+  ],
   empresa: "Carros de Selecção - Sociedade Automóvel Lda",
   nif: "506358089",
   morada: "Rua Dona Filipa de Vilhena 28A, 1000-137 Lisboa",

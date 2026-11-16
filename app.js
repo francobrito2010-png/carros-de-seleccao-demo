@@ -431,7 +431,21 @@
     if (b) { const open = b.getAttribute("aria-expanded") === "true"; $$(".mm-item[aria-expanded]").forEach(x => x.setAttribute("aria-expanded", "false")); b.setAttribute("aria-expanded", String(!open)); return; }
     if (e.target.closest("a")) setMenu(false);
   });
+  $("#fabTeam").innerHTML = (S.equipa || []).map(p => {
+    const pessoa = !p.linha && p.icon !== "mail" && p.icon !== "chat" && !/^(Linha|Telefone)/.test(p.nome);
+    const av = p.foto ? `<img src="${p.foto}" alt="">` : pessoa ? p.nome.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() : ic(p.icon);
+    const ext = /^https?:/.test(p.href) ? ' target="_blank" rel="noopener"' : "";
+    return `<a href="${p.href}"${ext}><span class="fab-av">${av}</span><span class="fab-tx"><small>${p.funcao}</small><b${p.icon === "mail" ? ' class="sm"' : ""}>${p.nome}</b>${p.info ? `<em>${p.info}${p.canal ? " · " + p.canal : ""}</em>` : ""}</span><span class="fab-go">${ic(p.icon)}</span></a>`;
+  }).join("");
   $("#fab").onclick = () => $(".fab-wrap").classList.toggle("open");
+  $("#fabClose").onclick = () => $(".fab-wrap").classList.remove("open");
+  $("#fabTeam").addEventListener("click", e => { if (e.target.closest("a")) $(".fab-wrap").classList.remove("open"); });
+  /* Serviços: abre ao passar o rato; em ecrãs tácteis abre ao primeiro toque */
+  const svcDd = $("#svcDd"), svcBtn = svcDd.querySelector(".hdr-btn");
+  const setDd = on => { svcDd.classList.toggle("open", on); svcBtn.setAttribute("aria-expanded", String(on)); };
+  svcBtn.addEventListener("click", e => { if (matchMedia("(hover:none)").matches && !svcDd.classList.contains("open")) { e.preventDefault(); setDd(true); } else { setDd(false); svcBtn.blur(); } });
+  svcDd.querySelector(".dd").addEventListener("click", e => { if (e.target.closest("a")) { setDd(false); document.activeElement && document.activeElement.blur(); } });
+  document.addEventListener("click", e => { if (!e.target.closest("#svcDd")) setDd(false); });
   document.addEventListener("click", e => { if (!e.target.closest(".fab-wrap")) $(".fab-wrap").classList.remove("open"); });
   document.addEventListener("submit", e => {
     if (!e.target.matches("[data-demo-form]")) return;

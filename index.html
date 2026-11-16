@@ -22,7 +22,16 @@
   <nav class="hdr-right">
     <a class="hdr-btn" href="#/viaturas"><svg class="ic"><use href="#i-list"/></svg><span>Viaturas</span></a>
     <button class="hdr-btn" data-open-search><svg class="ic"><use href="#i-search"/></svg><span>Pesquisar</span></button>
-    <a class="hdr-btn" href="#/servicos"><svg class="ic"><use href="#i-tool"/></svg><span>Serviços</span></a>
+    <div class="hdr-dd" id="svcDd">
+      <a class="hdr-btn" href="#/servicos" aria-haspopup="true" aria-expanded="false"><svg class="ic"><use href="#i-tool"/></svg><span>Serviços</span></a>
+      <div class="dd"><div class="dd-box">
+        <a href="#/servicos"><svg class="ic"><use href="#i-euro"/></svg>Financiamento</a>
+        <a href="#/servicos"><svg class="ic"><use href="#i-award"/></svg>Intermediação de Crédito</a>
+        <a href="#/servicos"><svg class="ic"><use href="#i-key"/></svg>Compramos o seu Carro</a>
+        <a href="#/servicos"><svg class="ic"><use href="#i-swap"/></svg>Retomas</a>
+        <a href="#/viaturas/garantia"><svg class="ic"><use href="#i-shield"/></svg>Garantia</a>
+      </div></div>
+    </div>
     <a class="hdr-btn" href="#/contactos"><svg class="ic"><use href="#i-chat"/></svg><span>Contactos</span></a>
   </nav>
 </header>
@@ -140,11 +149,12 @@
 
 <!-- Botão flutuante "Fale agora" -->
 <div class="fab-wrap">
-  <div class="fab-panel" id="fabPanel">
-    <div class="fab-head"><strong>Carros de Selecção</strong><span>Estamos aqui para ajudar!</span></div>
-    <a href="tel:+351217996060"><svg class="ic"><use href="#i-phone"/></svg><div><small>Ligar</small>217 996 060</div></a>
-    <a href="https://www.facebook.com/messages/t/carrosdeselecao/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-chat"/></svg><div><small>Messenger</small>Enviar mensagem</div></a>
-    <a href="mailto:vendas@carrosdeseleccao.pt"><svg class="ic"><use href="#i-mail"/></svg><div><small>Email</small>vendas@carrosdeseleccao.pt</div></a>
+  <div class="fab-panel" id="fabPanel" role="dialog" aria-label="Contactos">
+    <div class="fab-head">
+      <button class="fab-x" id="fabClose" aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+      <strong>Carros de Selecção</strong><span>Estamos aqui para ajudar! Não hesite em perguntar.</span>
+    </div>
+    <div class="fab-team" id="fabTeam"></div>
   </div>
   <button class="fab" id="fab" aria-label="Fale agora"><svg class="ic"><use href="#i-chat"/></svg><span>Fale agora</span></button>
 </div>
