@@ -28,7 +28,7 @@
   --ff:"Manrope",system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip}
 body{font-family:var(--ff);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;max-width:100%}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -637,3 +637,36 @@ main{padding-top:var(--hdr);min-height:60vh}
 :root[data-skin="noir"] .demo-tag{background:rgba(40,40,44,.9)}
 @media (max-width:760px){.demo-tag span{display:none}}
 @media print{.demo-tag{display:none}}
+
+/* ---------- Toque e fluidez ---------- */
+a,button,label,select,summary,input[type=checkbox],[role=button]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.latest,.chips,.thumbs,.fab-team{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.mm,.fab-team{overscroll-behavior:contain}
+.brands-track{will-change:transform}
+.hero-slide img{will-change:opacity}
+.demo-tag{backdrop-filter:none;-webkit-backdrop-filter:none}
+img{-webkit-user-drag:none}
+@media (hover:none){
+  .card:hover,.latest-item:hover,.svc:hover,.also a.mini:hover,.mm-brand:hover,.brand-it:hover,.ftr-soc a:hover,.fab:hover{transform:none}
+  .card:hover{box-shadow:var(--shadow)}
+  .card:hover .card-media img.on{transform:none}
+  .card:hover .more{--mb:var(--bg);color:var(--ink)}
+  .card.qv-open .more{--mb:var(--navy);color:#fff}
+  .more:hover .ic{transform:none}
+  .brands-view:hover .brands-track{animation-play-state:running}
+  .brand-it:hover{opacity:.6}.brand-it.has:hover{opacity:.92}
+  .mm-item:hover{padding-left:0;color:#fff}
+  .dd-box a:hover{padding-left:14px;background:transparent;color:var(--ink)}
+  .chip:hover{border-color:var(--line)}
+  .btn-ghost:hover{background:var(--surface);color:var(--navy)}
+  :root[data-skin="noir"] .btn-ghost:hover{color:#fff}
+  .hdr-btn:hover{color:var(--ink)}
+  .card-nav{opacity:.92}
+  .card,.latest-item,.svc,.mm-brand,.brand-it,.also a.mini{transition:transform .15s ease,box-shadow .2s}
+  .card:active{transform:scale(.985)}
+  .btn:active,.chip:active,.hdr-btn:active,.fab:active,.mm-brand:active,.latest-item:active,.also a.mini:active,.brand-it:active,.xchip:active span{transform:scale(.96)}
+  .dd-box a:active,.fab-team a:active,.mm-links a:active{background:var(--bg)}
+}
+@media (max-width:760px),(pointer:coarse){
+  input,select,textarea{font-size:16px}
+}

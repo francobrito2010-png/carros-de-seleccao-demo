@@ -4,7 +4,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const app = $("#app");
   const ic = (n, cls = "") => `<svg class="ic ${cls}"><use href="#i-${n}"/></svg>`;
-  const img = (car, i = 0) => `https://cdn.easysite.pt/pub/7325/${car.id}/API_NCAUTO_${car.fotos[i]}-0.webp`;
+  const img = (car, i = 0, s = 0) => `https://cdn.easysite.pt/pub/7325/${car.id}/API_NCAUTO_${car.fotos[i]}-${s}.webp`; // 0 = 2048px · 6 = 800px · 4 = 480px
   const MES = { JAN:"Jan.", FEV:"Fev.", MAR:"Mar.", ABR:"Abr.", MAI:"Mai.", JUN:"Jun.", JUL:"Jul.", AGO:"Ago.", SET:"Set.", OUT:"Out.", NOV:"Nov.", DEZ:"Dez." };
   const regFmt = r => { const [m, y] = r.split(" "); return `${MES[m] || m} ${y}`; };
   const ano = c => +c.registo.split(" ")[1];
@@ -85,7 +85,7 @@
       <a class="card-link" href="#/viatura/${c.id}" aria-label="${c.marca} ${c.modelo}"></a>
       <div class="card-media" data-i="0" data-n="${n}">
         ${ribbon(c)}
-        ${Array.from({ length: n }, (_, i) => `<img ${i ? `data-src="${img(c, i)}"` : `src="${img(c, 0)}"`} class="${i ? "" : "on"}" alt="${c.marca} ${c.modelo} — foto ${i + 1}" loading="lazy">`).join("")}
+        ${Array.from({ length: n }, (_, i) => `<img ${i ? `data-src="${img(c, i, 6)}"` : `src="${img(c, 0, 6)}"`} class="${i ? "" : "on"}" alt="${c.marca} ${c.modelo} — foto ${i + 1}" loading="lazy" decoding="async">`).join("")}
         <button class="card-nav prev" data-step="-1" aria-label="Foto anterior">${ic("left")}</button>
         <button class="card-nav next" data-step="1" aria-label="Foto seguinte">${ic("right")}</button>
         <div class="dots">${Array.from({ length: n }, (_, i) => `<i class="${i ? "" : "on"}"></i>`).join("")}</div>
@@ -126,7 +126,7 @@
     const stockN = CARS.filter(c => c.status !== "VENDIDO").length;
     app.innerHTML = `
     <section class="hero" id="hero">
-      ${heroCars.map((c, i) => `<div class="hero-slide ${i ? "" : "on"}"><img src="${img(c, 0)}" alt="${c.marca} ${c.modelo}" ${i ? 'loading="lazy"' : ""}></div>`).join("")}
+      ${heroCars.map((c, i) => `<div class="hero-slide ${i ? "" : "on"}"><img src="${img(c, 0)}" alt="${c.marca} ${c.modelo}" ${i ? 'loading="lazy" decoding="async"' : 'fetchpriority="high"'}></div>`).join("")}
       <div class="hero-txt"><div class="wrap"><span class="eyebrow">Stand automóvel · Lisboa</span><h1>Que viatura procura?</h1></div></div>
       <div class="hero-car" id="heroCar"></div>
     </section>
@@ -149,7 +149,7 @@
     <section class="sec" style="padding-bottom:20px">
       <div class="sec-head"><h2>Últimas entradas</h2><span class="eyebrow">Os mais recentes</span></div>
       <div class="latest">${CARS.filter(c => c.status !== "VENDIDO").slice(0, 10).map(c => `
-        <a class="latest-item" href="#/viatura/${c.id}"><img src="${img(c, 0)}" alt="" loading="lazy"><div><b>${c.marca}</b><span>${c.modelo}</span></div></a>`).join("")}
+        <a class="latest-item" href="#/viatura/${c.id}"><img src="${img(c, 0, 6)}" alt="" loading="lazy" decoding="async"><div><b>${c.marca}</b><span>${c.modelo}</span></div></a>`).join("")}
       </div>
     </section>
 
@@ -192,7 +192,7 @@
 
     <section class="sec" id="empresa" style="padding-top:20px">
       <div class="wrap about">
-        <img src="${img(CARS[0], 0)}" alt="Instalações Carros de Selecção em Lisboa" loading="lazy">
+        <img src="${img(CARS[0], 0, 6)}" alt="Instalações Carros de Selecção em Lisboa" loading="lazy" decoding="async">
         <div>
           <span class="eyebrow">Empresa</span>
           <h2>Viaturas escolhidas a dedo, no centro de Lisboa.</h2>
@@ -209,7 +209,7 @@
     const setHeroCar = () => { const c = heroCars[hi]; hc.innerHTML = `<a href="#/viatura/${c.id}"><b>${c.marca}</b> ${c.modelo.split(" ").slice(0, 3).join(" ")} · ${num(c.preco)} € ${ic("right")}</a>`; };
     setHeroCar();
     clearInterval(renderHome._t);
-    renderHome._t = setInterval(() => {
+    renderHome._t = setInterval(() => { if (document.hidden) return;
       if (!document.body.contains(slides[0])) return clearInterval(renderHome._t);
       slides[hi].classList.remove("on"); hi = (hi + 1) % slides.length; slides[hi].classList.add("on"); setHeroCar();
     }, 6000);
@@ -258,6 +258,23 @@
     if (e.target.closest("[data-qv-close]")) { e.preventDefault(); e.target.closest(".card").classList.remove("qv-open"); return; }
   });
 
+  /* Deslizar fotos nos cards (telemóvel) */
+  let sw = null;
+  const stepCard = (m, d) => {
+    const n = +m.dataset.n; if (n < 2) return; const i = (+m.dataset.i + d + n) % n;
+    const ims = $$("img", m); const im = ims[i]; if (im.dataset.src) { im.src = im.dataset.src; im.removeAttribute("data-src"); }
+    ims.forEach((x, k) => x.classList.toggle("on", k === i)); $$(".dots i", m).forEach((x, k) => x.classList.toggle("on", k === i)); m.dataset.i = i;
+  };
+  document.addEventListener("touchstart", e => { const m = e.target.closest(".card-media"); sw = m ? { m, x: e.touches[0].clientX, y: e.touches[0].clientY, moved: false } : null; }, { passive: true });
+  document.addEventListener("touchmove", e => { if (!sw) return; const dx = e.touches[0].clientX - sw.x, dy = e.touches[0].clientY - sw.y; if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) sw.moved = true; }, { passive: true });
+  document.addEventListener("touchend", e => {
+    if (!sw) return; const dx = e.changedTouches[0].clientX - sw.x, dy = e.changedTouches[0].clientY - sw.y;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) { stepCard(sw.m, dx < 0 ? 1 : -1); sw.block = Date.now(); swBlock = sw.block; }
+    sw = null;
+  }, { passive: true });
+  let swBlock = 0;
+  document.addEventListener("click", e => { if (Date.now() - swBlock < 400 && e.target.closest(".card")) { e.preventDefault(); e.stopPropagation(); } }, true);
+
   /* ---------- DETALHE ---------- */
   const GROUPS = [
     ["Segurança & Desempenho", "shield", /\bABS\b|Airbag|Alarme|\bESP\b|ISOFIX|Imobilizador|Fecho|parqueamento|Sensor|C[aâ]mara|Camara|Alerta|Aviso|Assist|Cruise|Direc|revis|ângulo/i],
@@ -289,7 +306,7 @@
 
     app.innerHTML = `
     <div class="dbar" id="dbar"><div class="wrap dbar-in">
-      <img class="dbar-thumb" src="${img(c, 0)}" alt="">
+      <img class="dbar-thumb" src="${img(c, 0, 4)}" alt="">
       <div class="dbar-name"><b>${c.marca}</b><span>${c.modelo}</span></div>
       <div class="dbar-reg">${ic("cal")}<div><small>Registo</small><b>${regFmt(c.registo)}</b></div></div>
       <div class="dbar-price"><small>Preço</small><strong>${sold ? "Vendido" : priceHTML(c)}</strong></div>
@@ -311,11 +328,11 @@
             <button class="icon-btn gal-exp" id="galExp" aria-label="Ampliar">${ic("expand")}</button>
             <span class="gal-count">${ic("camera")}<span id="galIdx">1</span> / ${c.fotos.length} Fotos</span>
           </div>
-          <div class="thumbs" id="thumbs">${c.fotos.map((f, i) => `<button class="${i ? "" : "on"}" data-t="${i}" aria-label="Foto ${i + 1}"><img src="${img(c, i)}" alt="" loading="lazy"></button>`).join("")}</div>
+          <div class="thumbs" id="thumbs">${c.fotos.map((f, i) => `<button class="${i ? "" : "on"}" data-t="${i}" aria-label="Foto ${i + 1}"><img src="${img(c, i, 4)}" alt="" loading="lazy" decoding="async"></button>`).join("")}</div>
         </div>
         <aside class="also">
           <h3>Também vai gostar destes!</h3>
-          ${others.map(o => `<a class="mini" href="#/viatura/${o.id}"><img src="${img(o, 0)}" alt="" loading="lazy"><span>${o.marca}<em>${o.modelo}</em></span></a>`).join("")}
+          ${others.map(o => `<a class="mini" href="#/viatura/${o.id}"><img src="${img(o, 0, 6)}" alt="" loading="lazy" decoding="async"><span>${o.marca}<em>${o.modelo}</em></span></a>`).join("")}
           <a class="btn btn-ghost btn-pill-sm" href="#/viaturas">Ver listagem</a>
         </aside>
       </div>
@@ -535,7 +552,7 @@
       const showPick = () => {
         const c = CARS.find(x => x.id === car.value);
         pick.classList.toggle("on", !!c);
-        pick.innerHTML = c ? `<img src="${img(c, 0)}" alt="${c.marca} ${c.modelo}"><div><b>${c.marca}</b><span>${c.modelo}</span><small>${regFmt(c.registo)} · ${num(c.km)} km · ${c.combustivel}</small><div class="pr">${c.preco ? num(c.preco) + " €" : "Sob consulta"}</div><a href="#/viatura/${c.id}">Ver ficha da viatura ${ic("right")}</a></div>` : "";
+        pick.innerHTML = c ? `<img src="${img(c, 0, 6)}" alt="${c.marca} ${c.modelo}"><div><b>${c.marca}</b><span>${c.modelo}</span><small>${regFmt(c.registo)} · ${num(c.km)} km · ${c.combustivel}</small><div class="pr">${c.preco ? num(c.preco) + " €" : "Sob consulta"}</div><a href="#/viatura/${c.id}">Ver ficha da viatura ${ic("right")}</a></div>` : "";
       };
       if (arg && CARS.some(c => c.id === arg)) car.value = arg;
       car.onchange = showPick; showPick();
